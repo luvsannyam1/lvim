@@ -46,3 +46,7 @@ lvim.builtin.which_key.mappings["t"] = {
 	e = { "<cmd>Telescope<CR>", "Telescope" },
 	t = { "<cmd>ToggleTerm<CR>", "Terminal" },
 }
+
+lvim.builtin.which_key.mappings["l"] = { "<cmd>Telescope live_grep<CR>", "Live grep" }
+
+lvim.keys.normal_mode["<C-n>"] = "<cmd>MCstart<CR>"
