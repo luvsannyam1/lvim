@@ -1,13 +1,13 @@
 vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "rust_analyzer" })
 
-local mason_path = vim.fn.glob(vim.fn.stdpath "data" .. "/mason/")
+local mason_path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/")
 
 local codelldb_path = mason_path .. "bin/codelldb"
 local liblldb_path = mason_path .. "packages/codelldb/extension/lldb/lib/liblldb"
 local this_os = vim.loop.os_uname().sysname
 
 -- The path in windows is different
-if this_os:find "Windows" then
+if this_os:find("Windows") then
   codelldb_path = mason_path .. "packages\\codelldb\\extension\\adapter\\codelldb.exe"
   liblldb_path = mason_path .. "packages\\codelldb\\extension\\lldb\\bin\\liblldb.dll"
 else
@@ -16,7 +16,7 @@ else
 end
 
 pcall(function()
-  require("rust-tools").setup {
+  require("rust-tools").setup({
     tools = {
       executor = require("rust-tools/executors").termopen, -- can be quickfix or termopen
       reload_workspace_from_cargo_toml = true,
@@ -26,7 +26,7 @@ pcall(function()
       inlay_hints = {
         auto = true,
         only_current_line = false,
-        show_parameter_hints = false,
+        show_parameter_hints = true,
         parameter_hints_prefix = "<-",
         other_hints_prefix = "=>",
         max_len_align = false,
@@ -54,7 +54,7 @@ pcall(function()
     server = {
       on_attach = function(client, bufnr)
         require("lvim.lsp").common_on_attach(client, bufnr)
-        local rt = require "rust-tools"
+        local rt = require("rust-tools")
         vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
       end,
 
@@ -71,7 +71,7 @@ pcall(function()
         },
       },
     },
-  }
+  })
 end)
 
 lvim.builtin.dap.on_config_done = function(dap)
@@ -90,9 +90,8 @@ lvim.builtin.dap.on_config_done = function(dap)
   }
 end
 
-
-local formatters = require "lvim.lsp.null-ls.formatters"
-formatters.setup {
+local formatters = require("lvim.lsp.null-ls.formatters")
+formatters.setup({
   { name = "black" },
   {
     name = "prettier",
@@ -103,40 +102,39 @@ formatters.setup {
     ---@usage only start in these filetypes, by default it will attach to all filetypes it supports
     filetypes = { "typescript", "typescriptreact" },
   },
-}
+})
 
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
+local linters = require("lvim.lsp.null-ls.linters")
+linters.setup({
   { name = "flake8" },
   {
     name = "shellcheck",
     args = { "--severity", "warning" },
   },
-}
+})
 
 lvim.format_on_save.enabled = true
 lvim.format_on_save.pattern = { "*.lua", "*.py", "*.js", "*.go", "*.ts" }
 
-local code_actions = require "lvim.lsp.null-ls.code_actions"
-code_actions.setup {
+local code_actions = require("lvim.lsp.null-ls.code_actions")
+code_actions.setup({
   {
     name = "proselint",
   },
-}
+})
 
-lvim.builtin.which_key.mappings["sF"] = { "<cmd>Telescope find_files hidden=true no_ignore=true<cr>",
-  "Find File Everywhere" }
+lvim.builtin.which_key.mappings["sF"] =
+{ "<cmd>Telescope find_files hidden=true no_ignore=true<cr>", "Find File Everywhere" }
 lvim.builtin.which_key.mappings["sT"] = {
   function()
-    require("telescope.builtin").live_grep {
-      additional_args = function(args) return vim.list_extend(args, { "--hidden", "--no-ignore" }) end,
-    }
+    require("telescope.builtin").live_grep({
+      additional_args = function(args)
+        return vim.list_extend(args, { "--hidden", "--no-ignore" })
+      end,
+    })
   end,
   "Text Everywhere",
 }
-
-
-
 
 local present, null_ls = pcall(require, "null-ls")
 
@@ -145,11 +143,11 @@ local b = null_ls.builtins
 local sources = {
 
   -- webdev stuff
-  b.formatting.prettier.with { filetypes = { "html", "markdown", "css", "javascript" } }, -- so prettier works only on these filetypes
+  b.formatting.prettier.with({ filetypes = { "html", "markdown", "css", "javascript" } }), -- so prettier works only on these filetypes
   b.diagnostics.eslint_d,
   --
   -- Lua
-  b.formatting.stylua.with { filetypes = { "lua" } },
+  b.formatting.stylua.with({ filetypes = { "lua" } }),
 
   -- backend stuff
   b.formatting.gofmt,
@@ -159,21 +157,21 @@ local sources = {
 
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-null_ls.setup {
+null_ls.setup({
   debug = true,
   sources = sources,
   on_attach = function(client, bufnr)
-    if client.supports_method "textDocument/formatting" then
-      vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+    if client.supports_method("textDocument/formatting") then
+      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = augroup,
         buffer = bufnr,
         callback = function()
           -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
           -- vim.lsp.buf.formatting_sync()
-          vim.lsp.buf.format { bufnr = bufnr }
+          vim.lsp.buf.format({ bufnr = bufnr })
         end,
       })
     end
   end,
-}
+})

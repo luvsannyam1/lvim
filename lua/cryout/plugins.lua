@@ -1,5 +1,7 @@
 lvim.plugins = {
 	-- UTILITY
+	{ "kevinhwang91/promise-async" },
+	{ "kevinhwang91/nvim-ufo", dependencies = "kevinhwang91/promise-async" },
 	{
 		"stevearc/dressing.nvim",
 	},

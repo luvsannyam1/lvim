@@ -44,7 +44,8 @@ lvim.builtin.which_key.mappings["y"] = {
 lvim.builtin.which_key.mappings["t"] = {
 	name = "Utility",
 	e = { "<cmd>Telescope<CR>", "Telescope" },
-	t = { "<cmd>ToggleTerm<CR>", "Terminal" },
+	t = { "<cmd>TroubleToggle<CR>", "Trouble" },
+	r = { "<cmd>eroubleRefresh<CR>", "TroubleRefresh" },
 }
 
 lvim.builtin.which_key.mappings["l"] = { "<cmd>Telescope live_grep<CR>", "Live grep" }

@@ -12,6 +12,13 @@ vim.cmd("let g:minimap_width = 10")
 vim.cmd("let g:minimap_auto_start = 1")
 vim.cmd("let g:minimap_auto_start_win_enter = 1")
 
+-- FOLDING
+vim.opt.fillchars = { fold = " " }
+vim.opt.foldmethod = "indent"
+vim.opt.foldenable = false
+vim.opt.foldlevel = 99
+-- g.markdown_folding = 1 -- enable markdown folding
+
 -- DRESSING (makes telescope look COOL)
 require("dressing").setup({
 	input = {
